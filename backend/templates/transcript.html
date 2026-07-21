@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0; padding: 40px; color: #333; }
+        .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid {{ primary_color | default('#000') }}; padding-bottom: 20px; margin-bottom: 40px; }
+        .institution-info h1 { margin: 0 0 10px 0; color: {{ primary_color | default('#000') }}; font-size: 28px; }
+        .institution-info p { margin: 0; color: #666; font-size: 14px; }
+        .title { text-align: right; }
+        .title h2 { margin: 0; font-size: 24px; color: #444; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .student-info { display: flex; justify-content: space-between; margin-bottom: 40px; padding: 20px; background: #f9f9f9; border-radius: 8px; }
+        .info-col { width: 45%; }
+        .info-row { display: flex; margin-bottom: 8px; font-size: 14px; }
+        .info-label { width: 120px; font-weight: bold; color: #555; }
+        .info-value { font-weight: 500; }
+        
+        table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+        th { background: {{ primary_color | default('#000') }}; color: white; text-align: left; padding: 12px; font-size: 14px; }
+        td { padding: 12px; border-bottom: 1px solid #ddd; font-size: 14px; }
+        tr:nth-child(even) { background-cast: #fcfcfc; }
+        
+        .summary { display: flex; justify-content: flex-end; margin-top: 40px; }
+        .cgpa-box { border: 2px solid {{ primary_color | default('#000') }}; border-radius: 8px; padding: 20px; text-align: center; min-width: 200px; }
+        .cgpa-label { font-size: 14px; color: #666; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
+        .cgpa-value { font-size: 36px; font-weight: bold; color: {{ primary_color | default('#000') }}; margin-top: 5px; }
+        
+        .footer { margin-top: 80px; text-align: center; font-size: 12px; color: #999; border-top: 1px solid #eee; padding-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="institution-info">
+            <h1>{{ institution_name }}</h1>
+            <p>Official Academic Records</p>
+        </div>
+        <div class="title">
+            <h2>Official Transcript</h2>
+            <p style="margin-top: 10px; font-size: 12px; color: #777;">Generated: {{ date }}</p>
+        </div>
+    </div>
+    
+    <div class="student-info">
+        <div class="info-col">
+            <div class="info-row"><div class="info-label">Name:</div><div class="info-value">{{ user.first_name }} {{ user.last_name }}</div></div>
+            <div class="info-row"><div class="info-label">Student ID:</div><div class="info-value">{{ user.username }}</div></div>
+        </div>
+        <div class="info-col">
+            <div class="info-row"><div class="info-label">Program:</div><div class="info-value">B.Tech Computer Science</div></div>
+            <div class="info-row"><div class="info-label">Status:</div><div class="info-value">Active</div></div>
+        </div>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Course ID</th>
+                <th>Course Name</th>
+                <th>Term</th>
+                <th style="text-align: center;">Credits</th>
+                <th style="text-align: center;">Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.course.code if record.course else "CS101" }}</td>
+                <td>{{ record.course.name if record.course else "Introduction to Programming" }}</td>
+                <td>{{ record.term.name if record.term else "Fall 2024" }}</td>
+                <td style="text-align: center;">{{ record.course.credits if record.course else 4 }}</td>
+                <td style="text-align: center; font-weight: bold;">{{ record.letter_grade or "A" }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 20px; color: #888;">No academic records found for this student.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="summary">
+        <div class="cgpa-box">
+            <div class="cgpa-label">Cumulative GPA</div>
+            <div class="cgpa-value">{{ cgpa }}</div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        This transcript is generated electronically by the {{ institution_name }} Automated Information System.<br>
+        Any alteration or unauthorized reproduction of this document is prohibited.
+    </div>
+</body>
+</html>
