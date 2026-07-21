@@ -1,0 +1,247 @@
+.dashboardContainer {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.sidebar {
+  width: 260px;
+  background: rgba(22, 22, 42, 0.85); /* Deep purple/blue */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 10;
+}
+
+.logoArea {
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoIcon {
+  width: 36px;
+  height: 36px;
+  background: #7c3aed; /* Vibrant purple */
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.logoText {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 1px;
+}
+
+.navLinks {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  color: #a7a7cc;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.navItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.navItemActive {
+  background: rgba(124, 58, 237, 0.15); /* Purple tint */
+  color: #fff;
+  border-left: 3px solid #7c3aed;
+}
+
+.navItemGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.navIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navLabel {
+  white-space: nowrap;
+}
+
+.subMenu {
+  display: flex;
+  flex-direction: column;
+  padding-left: 36px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  gap: 4px;
+}
+
+.subNavItem {
+  color: #a7a7cc;
+  text-decoration: none;
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.subNavItem::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  background: #a7a7cc;
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.subNavItem:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.subNavItemActive {
+  color: #7c3aed;
+  font-weight: 600;
+}
+
+.subNavItemActive::before {
+  background: #7c3aed;
+}
+
+/* --- MAIN AREA --- */
+
+.mainArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Prevents overflow */
+}
+
+/* --- TOPBAR --- */
+
+.topbar {
+  height: 70px;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(30, 27, 75, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.topLinks {
+  display: flex;
+  gap: 24px;
+}
+
+.topLink {
+  color: #a7a7cc;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+
+.topLink:hover {
+  color: white;
+}
+
+.topControls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.searchBar {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 250px;
+}
+
+.searchInput {
+  background: transparent;
+  border: none;
+  color: white;
+  outline: none;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.searchInput::placeholder {
+  color: #6b7280;
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  color: #a7a7cc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  font-size: 1.2rem;
+}
+
+.iconBtn:hover {
+  color: white;
+}
+
+.profileAvatar {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #a855f7, #ec4899);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+}
+
+/* --- CONTENT AREA --- */
+
+.contentArea {
+  padding: 32px;
+  flex: 1;
+  overflow-y: auto;
+}
