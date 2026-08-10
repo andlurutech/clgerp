@@ -130,7 +130,7 @@ export default function DrivePage() {
           <div style={{ width: '100%', height: '8px', background: 'rgba(0,0,0,0.3)', borderRadius: '4px', overflow: 'hidden' }}>
             <div style={{ 
               height: '100%', 
-              width: \`\${quotaPercentage}%\`, 
+              width: `${quotaPercentage}%`, 
               background: isOverQuota ? '#ef4444' : 'linear-gradient(90deg, #3b82f6, #10b981)',
               transition: 'width 0.5s ease-in-out'
             }} />
@@ -142,7 +142,7 @@ export default function DrivePage() {
       <div 
         {...getRootProps()} 
         style={{
-          border: \`2px dashed \${isDragActive ? '#10b981' : 'rgba(255,255,255,0.2)'}\`,
+          border: `2px dashed ${isDragActive ? '#10b981' : 'rgba(255,255,255,0.2)'}`,
           borderRadius: '24px',
           padding: '60px 20px',
           textAlign: 'center',

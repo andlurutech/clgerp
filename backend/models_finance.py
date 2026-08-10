@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 import enum
 from datetime import datetime
 
-from .database import Base
+from database import Base
 
 class TransactionType(enum.Enum):
     CHARGE = "Charge"
@@ -14,6 +14,7 @@ class TransactionType(enum.Enum):
 class StudentLedger(Base):
     __tablename__ = "student_ledger"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     student_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     transaction_type = Column(Enum(TransactionType))
     amount = Column(Integer)

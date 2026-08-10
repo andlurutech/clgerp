@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 import enum
 from datetime import datetime
 
-from .database import Base
+from database import Base
 
 class QuestionType(enum.Enum):
     MCQ = "MCQ"
@@ -16,6 +16,7 @@ class QuestionType(enum.Enum):
 class CourseContent(Base):
     __tablename__ = "course_contents"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     class_group_id = Column(UUID(as_uuid=True), ForeignKey("class_groups.id"))
     title = Column(String)
     content_url = Column(String)
@@ -24,6 +25,7 @@ class CourseContent(Base):
 class Assignment(Base):
     __tablename__ = "assignments"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     class_group_id = Column(UUID(as_uuid=True), ForeignKey("class_groups.id"))
     title = Column(String)
     description = Column(String)
@@ -33,6 +35,7 @@ class Assignment(Base):
 class AssignmentSubmission(Base):
     __tablename__ = "assignment_submissions"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     assignment_id = Column(UUID(as_uuid=True), ForeignKey("assignments.id"))
     student_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     submission_url = Column(String)
@@ -42,6 +45,7 @@ class AssignmentSubmission(Base):
 class QuestionBank(Base):
     __tablename__ = "question_bank"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     course_id = Column(UUID(as_uuid=True), ForeignKey("courses.id"))
     faculty_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     question_type = Column(Enum(QuestionType))
@@ -52,6 +56,7 @@ class QuestionBank(Base):
 class Assessment(Base):
     __tablename__ = "assessments"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     class_group_id = Column(UUID(as_uuid=True), ForeignKey("class_groups.id"))
     title = Column(String)
     start_time = Column(DateTime)
@@ -61,6 +66,7 @@ class Assessment(Base):
 class AssessmentSubmission(Base):
     __tablename__ = "assessment_submissions"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     assessment_id = Column(UUID(as_uuid=True), ForeignKey("assessments.id"))
     student_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     started_at = Column(DateTime, default=datetime.utcnow)

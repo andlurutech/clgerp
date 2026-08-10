@@ -5,11 +5,12 @@ from sqlalchemy.orm import relationship
 import enum
 from datetime import datetime
 
-from .database import Base
+from database import Base
 
 class DriveFolder(Base):
     __tablename__ = "drive_folders"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     parent_id = Column(UUID(as_uuid=True), ForeignKey("drive_folders.id"), nullable=True)
     name = Column(String)
@@ -18,6 +19,7 @@ class DriveFolder(Base):
 class DriveDocument(Base):
     __tablename__ = "drive_documents"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     folder_id = Column(UUID(as_uuid=True), ForeignKey("drive_folders.id"), nullable=True)
     name = Column(String)
@@ -30,6 +32,7 @@ class DriveDocument(Base):
 class PersonalDrive(Base):
     __tablename__ = "personal_drives"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     used_storage_bytes = Column(Integer, default=0)
     quota_bytes = Column(Integer, default=52428800) # 50MB default

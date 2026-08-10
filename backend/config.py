@@ -8,6 +8,9 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6379"
     active_payment_gateway: str = "Razorpay"
     
+    app_env: str = "production"
+    default_dev_tenant: str = ""
+    
     # Feature Flags for Supplementary Integrations
     enable_turnitin: bool = False
     enable_tally_sync: bool = False

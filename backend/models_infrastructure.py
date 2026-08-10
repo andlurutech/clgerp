@@ -5,17 +5,19 @@ from sqlalchemy.orm import relationship
 import enum
 from datetime import datetime
 
-from .database import Base
+from database import Base
 
 class HostelBlock(Base):
     __tablename__ = "hostel_blocks"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     name = Column(String)
     gender_type = Column(String)
 
 class HostelRoom(Base):
     __tablename__ = "hostel_rooms"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     block_id = Column(UUID(as_uuid=True), ForeignKey("hostel_blocks.id"))
     room_number = Column(String)
     capacity = Column(Integer)
@@ -28,6 +30,7 @@ class AllotmentStatus(enum.Enum):
 class HostelAllotment(Base):
     __tablename__ = "hostel_allotments"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     student_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     room_id = Column(UUID(as_uuid=True), ForeignKey("hostel_rooms.id"))
     status = Column(Enum(AllotmentStatus), default=AllotmentStatus.PROVISIONAL)
@@ -35,6 +38,7 @@ class HostelAllotment(Base):
 class MaintenanceTicket(Base):
     __tablename__ = "maintenance_tickets"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     category = Column(String) # e.g. Housekeeping, Internet, Plumbing
     description = Column(String)
@@ -43,12 +47,14 @@ class MaintenanceTicket(Base):
 class CanteenMenu(Base):
     __tablename__ = "canteen_menus"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     meal_type = Column(String) # Breakfast, Lunch, Dinner
     items = Column(String)
 
 class MealConsumption(Base):
     __tablename__ = "meal_consumptions"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     student_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     meal_type = Column(String)
     consumed_at = Column(DateTime, default=datetime.utcnow)
@@ -56,6 +62,7 @@ class MealConsumption(Base):
 class TransportRoute(Base):
     __tablename__ = "transport_routes"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     route_name = Column(String)
     pickup_point = Column(String)
     fee_amount = Column(Integer)

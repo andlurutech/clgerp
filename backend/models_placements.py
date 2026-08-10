@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 import enum
 from datetime import datetime
 
-from .database import Base
+from database import Base
 
 class Organization(Base):
     __tablename__ = "organizations"
@@ -17,6 +17,7 @@ class Organization(Base):
 class PlacementOpportunity(Base):
     __tablename__ = "placement_opportunities"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     organization_id = Column(UUID(as_uuid=True), ForeignKey("organizations.id"))
     title = Column(String)
     description = Column(String)
@@ -33,6 +34,7 @@ class ApplicationStage(enum.Enum):
 class PlacementApplication(Base):
     __tablename__ = "placement_applications"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     opportunity_id = Column(UUID(as_uuid=True), ForeignKey("placement_opportunities.id"))
     student_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     stage = Column(Enum(ApplicationStage), default=ApplicationStage.APPLIED)
@@ -40,6 +42,7 @@ class PlacementApplication(Base):
 class IssuedCertificate(Base):
     __tablename__ = "issued_certificates"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     student_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     template_name = Column(String)
     serial_number = Column(String, unique=True)
@@ -48,6 +51,7 @@ class IssuedCertificate(Base):
 class ResearchProject(Base):
     __tablename__ = "research_projects"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     faculty_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     title = Column(String)
     funding_agency = Column(String)

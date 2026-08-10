@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 import enum
 from datetime import datetime
 
-from .database import Base
+from database import Base
 
 class GradingType(enum.Enum):
     ABSOLUTE = "Absolute"
@@ -14,6 +14,7 @@ class GradingType(enum.Enum):
 class GradingSchema(Base):
     __tablename__ = "grading_schemas"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     program_id = Column(UUID(as_uuid=True), ForeignKey("programs.id"))
     grading_type = Column(Enum(GradingType), default=GradingType.ABSOLUTE)
     internal_weight = Column(Integer, default=50)
@@ -22,6 +23,7 @@ class GradingSchema(Base):
 class UnifiedGradeBook(Base):
     __tablename__ = "unified_grade_book"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     student_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     course_id = Column(UUID(as_uuid=True), ForeignKey("courses.id"))
     term_id = Column(UUID(as_uuid=True), ForeignKey("terms.id"))
@@ -32,6 +34,7 @@ class UnifiedGradeBook(Base):
 class GradeAuditLog(Base):
     __tablename__ = "grade_audit_logs"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     grade_book_id = Column(UUID(as_uuid=True), ForeignKey("unified_grade_book.id"))
     admin_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     previous_grade = Column(String)
@@ -42,6 +45,7 @@ class GradeAuditLog(Base):
 class AnswerSheetMask(Base):
     __tablename__ = "answer_sheet_masks"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     student_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     assessment_id = Column(UUID(as_uuid=True), ForeignKey("assessments.id"))
     evaluation_token = Column(String, unique=True) # Anonymous token for faculty grading

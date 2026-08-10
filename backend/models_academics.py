@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 import enum
 from datetime import datetime
 
-from .database import Base
+from database import Base
 
 class RegistrationStatus(enum.Enum):
     SELECTED = "Selected"
@@ -15,6 +15,7 @@ class RegistrationStatus(enum.Enum):
 class Term(Base):
     __tablename__ = "terms"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     program_id = Column(UUID(as_uuid=True), ForeignKey("programs.id"))
     name = Column(String) # e.g. "Fall 2024"
     start_date = Column(DateTime)
@@ -24,6 +25,7 @@ class Term(Base):
 class CourseOffering(Base):
     __tablename__ = "course_offerings"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     course_id = Column(UUID(as_uuid=True), ForeignKey("courses.id"))
     term_id = Column(UUID(as_uuid=True), ForeignKey("terms.id"))
     capacity = Column(Integer, default=60)
@@ -34,6 +36,7 @@ class CourseOffering(Base):
 class ClassGroup(Base):
     __tablename__ = "class_groups"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     course_offering_id = Column(UUID(as_uuid=True), ForeignKey("course_offerings.id"))
     name = Column(String) # e.g. "Section A"
     faculty_id = Column(UUID(as_uuid=True), ForeignKey("users.id")) # Primary instructor
@@ -41,6 +44,7 @@ class ClassGroup(Base):
 class CourseRegistration(Base):
     __tablename__ = "course_registrations"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     student_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     course_offering_id = Column(UUID(as_uuid=True), ForeignKey("course_offerings.id"))
     status = Column(Enum(RegistrationStatus), default=RegistrationStatus.SELECTED)
@@ -49,6 +53,7 @@ class CourseRegistration(Base):
 class Attendance(Base):
     __tablename__ = "attendance"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True, index=True)
     class_group_id = Column(UUID(as_uuid=True), ForeignKey("class_groups.id"))
     student_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     date = Column(DateTime)

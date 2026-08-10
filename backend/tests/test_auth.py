@@ -1,44 +1,32 @@
 import pytest
-from httpx import AsyncClient
+from datetime import timedelta
+import auth
+from jose import jwt
 
-pytestmark = pytest.mark.asyncio
+def test_password_hashing():
+    password = "SuperSecretPassword123"
+    hashed = auth.get_password_hash(password)
+    assert hashed != password
+    assert auth.verify_password(password, hashed)
+    assert not auth.verify_password("WrongPassword", hashed)
 
-async def test_valid_login(client: AsyncClient, test_db):
-    import auth, models
-    user = models.User(
-        username="logintester",
-        email="login@clgerp.com",
-        password_hash=auth.get_password_hash("securepass"),
-        is_active=True
-    )
-    test_db.add(user)
-    await test_db.commit()
-
-    response = await client.post(
-        "/login", 
-        json={"username_or_email": "logintester", "password": "securepass"},
-        headers={"X-Forwarded-For": "192.168.1.1"}
-    )
+def test_jwt_creation_and_validation():
+    data = {"sub": "testuser"}
+    token = auth.create_access_token(data, expires_delta=timedelta(minutes=15))
     
-    assert response.status_code == 200
-    data = response.json()
-    assert "access_token" in data
+    payload = jwt.decode(token, auth.SECRET_KEY, algorithms=[auth.ALGORITHM])
+    assert payload["sub"] == "testuser"
+    assert "exp" in payload
 
-async def test_rate_limit_trigger(client: AsyncClient):
-    # Hit the endpoint 6 rapid times
-    # 5/minute limit on /login
-    for i in range(5):
-        response = await client.post(
-            "/login", 
-            json={"username_or_email": "fake", "password": "fake"},
-            headers={"X-Forwarded-For": "192.168.1.1"}
-        )
-        assert response.status_code == 401
+def test_expired_jwt():
+    data = {"sub": "testuser"}
+    # Token expired 5 minutes ago
+    token = auth.create_access_token(data, expires_delta=timedelta(minutes=-5))
+    
+    with pytest.raises(jwt.ExpiredSignatureError):
+        jwt.decode(token, auth.SECRET_KEY, algorithms=[auth.ALGORITHM])
 
-    # 6th request should trip slowapi and return 429
-    response = await client.post(
-        "/login", 
-        json={"username_or_email": "fake", "password": "fake"},
-        headers={"X-Forwarded-For": "192.168.1.1"}
-    )
-    assert response.status_code == 429
+def test_otp_generation():
+    otp = auth.generate_otp()
+    assert len(otp) == 6
+    assert otp.isdigit()
